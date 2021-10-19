@@ -22,6 +22,7 @@ namespace StringManipulations
             Console.WriteLine(test.StringCreationCallBackSpanWithLoop());
             Console.WriteLine(test.StringBuilderWithLoop());
             Console.WriteLine(test.StringBuilderWithRepeat());
+            Console.WriteLine(test.UnsafeManipulateString());
 
             Environment.Exit(0);
 #endif
@@ -114,6 +115,20 @@ namespace StringManipulations
             e.Append('*', Password.Length-3);
 
             return e.ToString();
+        }
+
+        [Benchmark]
+        public unsafe string UnsafeManipulateString()
+        {
+            var result = new string(Password);
+            fixed (char* chars = result)
+            {
+                for (int i = 3; i < result.Length; i++)
+                {
+                    chars[i] = '*';
+                }
+            }
+            return result;
         }
     }
 }
